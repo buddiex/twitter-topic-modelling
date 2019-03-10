@@ -6,7 +6,7 @@ def get_user_timeline(username: str):
     results = twitter.statuses.user_timeline(screen_name=username)
     for status in results:
         print([status["created_at"],
-               # status["text"].encode("ascii", "ignore"),
+               status["text"].encode("ascii", "ignore"),
                [i["text"] for i in status["entities"]["hashtags"]],
                [i["screen_name"] for i in status["entities"]["user_mentions"]]
                ]
