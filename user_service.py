@@ -1,5 +1,6 @@
 from typing import List
-from config import twitter
+import tweepy
+from config import api
 from user import User
 
 
@@ -7,22 +8,20 @@ class UserService:
     def __init__(self, user: User):
         self.user = user
 
-    def get_user_timeline(self):
-        results = twitter.statuses.user_timeline(screen_name=self.user.username)
-        for status in results:
-            print([status["created_at"],
-                   status["text"].encode("ascii", "ignore"),
-                   [i["text"] for i in status["entities"]["hashtags"]],
-                   [i["screen_name"] for i in status["entities"]["user_mentions"]]
-                   ]
-                  )
+    def get_user_timeline(self) -> List[List]:
+        return [[status.full_text.encode("ascii", "ignore"),
+                 [i["text"] for i in status.entities["hashtags"]],
+                 [i["screen_name"] for i in status.entities["user_mentions"]]]
+                for status in
+                tweepy.Cursor(api.user_timeline, screen_name=self.user.username, tweet_mode="extended").items(10)
+                ]
 
     def get_users_following(self, number_of_followers: int = 100) -> List:
-        query = twitter.friends.ids(screen_name=self.user.username)
+        query = api.friends.ids(screen_name=self.user.username)
         return list(map(str, query["ids"][:number_of_followers]))
 
     def get_users_followers(self, number_of_followers: int) -> List:
-        query = twitter.followers.ids(screen_name=self.user.username)
+        query = api.followers.ids(screen_name=self.user.username)
         return list(map(str, query["ids"][:number_of_followers]))
 
     def get_user_description(self) -> str:
@@ -34,5 +33,5 @@ class UserService:
 
     @staticmethod
     def __get_users_descriptions(usernames: List) -> List:
-        result = twitter.users.lookup(user_id=','.join(usernames))
+        result = api.users.lookup(user_id=','.join(usernames))
         return [res['description'] for res in result]
