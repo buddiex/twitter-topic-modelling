@@ -1,10 +1,21 @@
-from user import User
-from user_service import UserService
+from user import Handle
+from data_collection_service import DataCollectionService
 
-user_service = UserService(User("etsu"))
 
-# print(user_service.get_user_timeline())
-# out = user_service.get_followers_descriptions(100)
-out = user_service.get_user_timeline()
-for pp in out:
-    print(pp)
+
+def aggregage_user_data(user: str):
+    target_user = Handle(user)
+    dc = DataCollectionService()
+
+    targets_followers = dc.get_users_followers(target_user.username, 5)
+    all_row = [dc.get_aggregate_timeline_text(follower) for follower in targets_followers]
+    print(all_row)
+
+
+
+
+
+
+user = "etsu"
+
+
