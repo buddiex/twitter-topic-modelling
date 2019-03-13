@@ -3,38 +3,12 @@ import tweepy
 from tweepy.models import Status
 
 from config import api
-
-
-class TweetDataAggregator:
-
-    def __init__(self):
-        self.hashtags = []
-        self.mentions = []
-        self.handles_retweeted = []
-        self.tweet_text = ''
-
-    def parse(self, tweet):
-        if "quoted_status" in tweet:
-            quoted_tweet = tweet["quoted_status"]
-            self.handles_retweeted.append(quoted_tweet["user"]["screen_name"])
-            self.__retrieve_data(quoted_tweet)
-
-        if "retweeted_status" in tweet:
-            tweet = tweet["retweeted_status"]
-            self.handles_retweeted.append(tweet["user"]["screen_name"])
-
-        self.__retrieve_data(tweet)
-
-    def __retrieve_data(self, tweet):
-        self.hashtags.extend([i["text"] for i in tweet["entities"]["hashtags"]])
-        self.mentions.extend([i["screen_name"] for i in tweet["entities"]["user_mentions"]])
-        self.tweet_text += tweet["full_text"] + " "
+from user import TweetDataAggregator
 
 
 class DataCollectionService:
 
-    def get_aggregate_timeline_text(self, user_id, count: int = 100) -> List[List]:
-        output = []
+    def get_aggregate_timeline_text(self, user_id, count: int = 100) -> TweetDataAggregator:
         tweet_data = TweetDataAggregator()
 
         for tweet_obj in self.get_data(api.user_timeline, user_id, count):
