@@ -14,12 +14,8 @@ def target_handle_followers():
 
 
 def test_get_aggregate_timeline_text():
-    all_txt = user_service.get_aggregate_timeline_text(user.username)
-    print(all_txt)
-
-
-def test_get_user_timeline():
-    content_returned_test(user_service.get_user_timeline(user.username, count))
+    all_txt = user_service.get_aggregate_timeline_text(user.username, count)
+    print(all_txt.hashtags)
 
 
 def test_get_users_followers(target_handle_followers):
@@ -42,7 +38,7 @@ def test_get_bulk_user_description(target_handle_followers):
 
 
 def content_returned_test(rtn):
-    print(rtn)
+    # print(rtn)
     lent = len(rtn)
     assert (lent == count)
 
