@@ -2,3 +2,8 @@ python-dotenv
 tweepy
 pandas
 pytest
+git+https://github.com/s/preprocessor.git
+stop-words
+textblob
+git+https://github.com/markoarnauto/biterm.git
+pyLDAvis

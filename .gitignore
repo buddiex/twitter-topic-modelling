@@ -112,3 +112,7 @@ venv.bak/
 *.iml
 out
 gen
+
+
+# this project files
+Untitled*

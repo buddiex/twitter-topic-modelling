@@ -10,7 +10,7 @@ class DataCollectionService:
 
     def get_aggregate_timeline_text(self, user_id, count: int = 1000) -> TweetDataAggregator:
         tweet_data = TweetDataAggregator()
-        print(api.get_user(user_id).screen_name)
+        tweet_data.screen_name = api.get_user(user_id).screen_name
         for tweet_obj in tweepy.Cursor(api.user_timeline, user_id=user_id, tweet_mode="extended", count = 200).items(count):
             tweet_data.parse(tweet_obj._json)
         return tweet_data

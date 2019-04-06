@@ -1,5 +1,3 @@
-
-
 class Handle():
     def __init__(self, username):
         self.username = username
@@ -12,6 +10,7 @@ class TweetDataAggregator:
         self.mentions = []
         self.handles_retweeted = []
         self.tweet_text = ''
+        self.screen_name = ''
 
     def parse(self, tweet):
         if "quoted_status" in tweet:
