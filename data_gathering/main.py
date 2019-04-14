@@ -4,4 +4,4 @@ data_aggregator = DataAggregator()
 
 handle = "etsu"
 
-tweets_data_frame = data_aggregator.get_tweets_data_frame(handle, 10)
+tweets_data_frame = data_aggregator.get_tweets_data_frame(handle, 20)

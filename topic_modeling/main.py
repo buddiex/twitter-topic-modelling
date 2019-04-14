@@ -1,15 +1,30 @@
-import csv
-from topic_modeling.biterm_classifier import traing_top_model
+from topic_modeling.biterm_classifier import train_topic_model
 
+from config import db_conn
+import pandas as pd
 from topic_modeling.topic_classifier import TopicClassifier
 
-# get the list of topics derived from Osas's data
-# topicClassifier = TopicClassifier('./model/GoogleNews-vectors-negative300.bin')
-#
-# with open('./data/user_topics.csv', 'r') as user_topics_file:
-# 	file_contents = csv.reader(user_topics_file, delimiter=',')
-# 	for row in file_contents:
-# 		print(topicClassifier.get_topic(row[4].split()))
+# train_topic_model()
 
+# topic classification process
+topic_classifier = TopicClassifier('../model/GoogleNews-vectors-negative300.bin')
 
-traing_top_model()
+topics_query = "select * from topics"
+
+add_category_query = """
+                        update topics
+                        set category = '{}'
+                        where id = {}
+                        """
+
+topics = pd.read_sql(topics_query, db_conn)
+
+for topic in topics.values:
+    topic_id = topic[0]
+    aggregate_of_topics = topic[2].split()
+    category = topic_classifier.get_topic(aggregate_of_topics)
+    cur = db_conn.cursor()
+    cur.execute(add_category_query.format("test", topic_id))
+    print(topic)
+
+db_conn.commit()

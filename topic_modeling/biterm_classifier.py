@@ -1,7 +1,6 @@
 import re
 import nltk
 import string
-import sqlite3
 import stop_words
 import wordsegment
 import numpy as np
@@ -25,8 +24,6 @@ lemmatizer = WordNetLemmatizer()
 
 wordNet_lemmatizer = lambda x: " ".join([lemmatizer.lemmatize(word) for word in x.split()])
 texblob_lemmatizer = lambda x: " ".join([Word(word).lemmatize() for word in x.split()])
-
-db_conn =  sqlite3.connect('../database.db')
 
 
 def segment_harsh_tags(tags):
@@ -90,27 +87,28 @@ def update_table_tweets_table(df):
     db_conn.commit()
 
 
-followers_df = pd.read_sql("select * from followers", db_conn)
-for index, row in followers_df.iterrows():
-    follower_screen_name = row['screen_name']
-    sql = "select * from tweets where follower_id='{}'".format(row['id'])
-    texts_df = pd.read_sql(sql, db_conn)
+def train_topic_model():
+    followers_df = pd.read_sql("select * from followers", db_conn)
+    for index, row in followers_df.iterrows():
+        follower_screen_name = row['screen_name']
+        sql = "select * from tweets where follower_id='{}'".format(row['id'])
+        texts_df = pd.read_sql(sql, db_conn)
 
-    texts_df['clean_tweets'] = texts_df['text'].map(clean_tweets)
-    texts_df['topics'] = ''
-    user_topics_df = pd.DataFrame(columns=["follower_topic_index", "words", "category"])
-    print("processing for user:{} with {} tweets".format(follower_screen_name, len(texts_df)))
-    text = list(texts_df['clean_tweets'])
-    # actual topic modelling
-    if text:
-        topics, summary = get_users_topics(text, num_topics=10)
-        for i in range(len(summary['coherence'])):
-            user_topics_df = user_topics_df.append({
-                "follower_id": row['id'],
-                "follower_topic_index": i,
-                "words": " ".join(summary['top_words'][i])
-            },
-                ignore_index=True)
-        user_topics_df.to_sql("topics", db_conn, if_exists="append", index=False)
-        texts_df['topics'] = topics
-        update_table_tweets_table(texts_df)
+        texts_df['clean_tweets'] = texts_df['text'].map(clean_tweets)
+        texts_df['topics'] = ''
+        user_topics_df = pd.DataFrame(columns=["follower_topic_index", "words", "category"])
+        print("processing for user:{} with {} tweets".format(follower_screen_name, len(texts_df)))
+        text = list(texts_df['clean_tweets'])
+        # actual topic modelling
+        if text:
+            topics, summary = get_users_topics(text, num_topics=10)
+            for i in range(len(summary['coherence'])):
+                user_topics_df = user_topics_df.append({
+                    "follower_id": row['id'],
+                    "follower_topic_index": i,
+                    "words": " ".join(summary['top_words'][i])
+                },
+                    ignore_index=True)
+            user_topics_df.to_sql("topics", db_conn, if_exists="append", index=False)
+            texts_df['topics'] = topics
+            update_table_tweets_table(texts_df)

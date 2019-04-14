@@ -1,13 +1,21 @@
 import pandas as pd
+
 from wordcloud import WordCloud
+
+from config import db_conn
 
 import matplotlib.pyplot as plt
 
 # Load in the dataframe
-df = pd.read_csv("../data/user_topics.csv", index_col=0)
 all_topics = ""
-for row in df.values:
-	all_topics += "" + row[5] + " "
+
+topics_query = "select * from topics"
+
+# get topics from database
+topics = pd.read_sql(topics_query, db_conn)
+
+for topic in topics.values:
+    all_topics += "" + topic[3] + " "
 
 # Create and generate a word cloud image:
 wordcloud = WordCloud().generate(all_topics)
@@ -16,3 +24,5 @@ wordcloud = WordCloud().generate(all_topics)
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 plt.show()
+
+
