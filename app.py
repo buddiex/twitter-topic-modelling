@@ -16,7 +16,7 @@ def aggregage_user_data(user: str) -> pd.DataFrame:
 	tweets_df = pd.DataFrame(columns=["followers_screen_name", "tweets"])
 
 	for follower in targets_followers:
-		tweets_data = dc.get_aggregate_timeline_text(follower, 200)
+		tweets_data = dc.get_aggregate_timeline_text(follower, 500)
 		friends_ids = dc.get_users_friends(user_id=follower)
 		followers_ids = dc.get_users_followers(user_id=follower)
 		user_description = dc.get_users_descriptions(user_ids=[follower])
