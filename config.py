@@ -17,4 +17,4 @@ api = tweepy.API(auth,  wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 # api = Twitter(auth=OAuth(ACCESS_KEY, ACCESS_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
 # Create your connection.
-db_conn = sqlite3.connect('database.db')
+db_conn = sqlite3.connect('../database.db')

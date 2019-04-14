@@ -4,7 +4,4 @@ data_aggregator = DataAggregator()
 
 handle = "etsu"
 
-tweets_data_frame = data_aggregator.get_tweets_data_frame(handle)
-for tweets in tweets_data_frame:
-	print(tweets)
-	# todo: store data into sqlite database from data frame
+tweets_data_frame = data_aggregator.get_tweets_data_frame(handle, 10)
