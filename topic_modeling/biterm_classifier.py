@@ -1,6 +1,7 @@
 import re
 import nltk
 import string
+import sqlite3
 import stop_words
 import wordsegment
 import numpy as np
@@ -24,6 +25,8 @@ lemmatizer = WordNetLemmatizer()
 
 wordNet_lemmatizer = lambda x: " ".join([lemmatizer.lemmatize(word) for word in x.split()])
 texblob_lemmatizer = lambda x: " ".join([Word(word).lemmatize() for word in x.split()])
+
+db_conn =  sqlite3.connect('../database.db')
 
 
 def segment_harsh_tags(tags):
@@ -75,9 +78,6 @@ def get_users_topics(texts, num_topics=10):
     return [t.argmax() for t in topics], summary
 
 
-followers_df = pd.read_sql("select * from followers", db_conn)
-
-
 def update_table_tweets_table(df):
     df.to_sql('temp_table', db_conn, if_exists='replace')
 
@@ -90,6 +90,7 @@ def update_table_tweets_table(df):
     db_conn.commit()
 
 
+followers_df = pd.read_sql("select * from followers", db_conn)
 for index, row in followers_df.iterrows():
     follower_screen_name = row['screen_name']
     sql = "select * from tweets where follower_id='{}'".format(row['id'])
