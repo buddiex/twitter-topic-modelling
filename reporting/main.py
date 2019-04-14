@@ -8,14 +8,23 @@ import matplotlib.pyplot as plt
 
 # Load in the dataframe
 all_topics = ""
-
+all_categories = ""
 topics_query = "select * from topics"
 
 # get topics from database
 topics = pd.read_sql(topics_query, db_conn)
 
 for topic in topics.values:
-    all_topics += "" + topic[3] + " "
+    all_topics += "" + topic[2] + " "
+    all_categories += "" + topic[3] + " "
+
+# Create and generate a word cloud image:
+wordcloud = WordCloud().generate(all_categories)
+
+# Display the generated image:
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.show()
 
 # Create and generate a word cloud image:
 wordcloud = WordCloud().generate(all_topics)
@@ -24,5 +33,6 @@ wordcloud = WordCloud().generate(all_topics)
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 plt.show()
+
 
 
