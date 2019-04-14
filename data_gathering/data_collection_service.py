@@ -1,14 +1,18 @@
 from typing import List
+
 import tweepy
 from tweepy.models import Status
 
 from config import api
-from user import TweetDataAggregator
+from data_gathering.tweet_data_aggregator import TweetDataAggregator
 
 
 class DataCollectionService:
+	def __init(self):
+		self.tweet_data = TweetDataAggregator()
 
-	def get_aggregate_timeline_text(self, user_id, count: int = 1000) -> TweetDataAggregator:
+	@staticmethod
+	def get_aggregate_timeline_text(user_id, count: int = 1000) -> TweetDataAggregator:
 		tweet_data = TweetDataAggregator()
 		tweet_data.screen_name = api.get_user(user_id).screen_name
 		for tweet_obj in tweepy.Cursor(api.user_timeline, user_id=user_id, tweet_mode="extended", count=count).items(

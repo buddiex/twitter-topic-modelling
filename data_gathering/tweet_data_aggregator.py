@@ -1,10 +1,4 @@
-class Handle():
-    def __init__(self, username):
-        self.username = username
-
-
 class TweetDataAggregator:
-
     def __init__(self):
         self.hashtags = []
         self.mentions = []

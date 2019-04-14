@@ -1,7 +1,7 @@
 import pytest
 
-from user import Handle
-from data_collection_service import DataCollectionService
+from data_gathering.handle import Handle
+from data_gathering.data_collection_service import DataCollectionService
 
 user = Handle("omigie")
 user_service = DataCollectionService()
@@ -41,7 +41,3 @@ def content_returned_test(rtn):
     # print(rtn)
     lent = len(rtn)
     assert (lent == count)
-
-# def test_get_users_following():
-#     lent = len(user_service.get_users_friends())
-#     assert (lent > 0)

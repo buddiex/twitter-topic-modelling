@@ -1,5 +1,3 @@
-import csv
-
 import gensim
 
 
@@ -18,7 +16,7 @@ class TopicClassifier:
 				if word != other_topic:
 					try:
 						similarity = self.model.similarity(word, other_topic)
-						# update most similar word
+						# update to the most similar word
 						if similarity > most_similar_to_other_words:
 							most_similar_to_other_words = similarity
 					except KeyError:
@@ -30,13 +28,3 @@ class TopicClassifier:
 				most_common_word = word
 
 		return most_common_word
-
-
-# get the list of topics derived from Osas's data
-topicClassifier = TopicClassifier('./model/GoogleNews-vectors-negative300.bin')
-
-with open('./data/user_topics.csv', 'r') as user_topics_file:
-	file_contents = csv.reader(user_topics_file, delimiter=',')
-	for row in file_contents:
-		print(topicClassifier.get_topic(row[4].split()))
-
