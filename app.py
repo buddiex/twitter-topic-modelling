@@ -1,13 +1,11 @@
-from user import Handle
-from data_collection_service import DataCollectionService
+from data_gathering.handle import Handle
+from data_gathering.data_collection_service import DataCollectionService
 import pandas as pd
 from config import db_conn
 
 
 def add_follower(screen_name):
-
     sql = '''INSERT INTO followers (screen_name) VALUES("{}")'''.format(screen_name)
-    print(sql)
     cur = db_conn.cursor()
     cur.execute(sql)
     db_conn.commit()
@@ -32,7 +30,6 @@ def aggregage_user_data(user: str) -> pd.DataFrame:
             }, ignore_index=True)
 
         tweets_df.to_sql("tweets", db_conn, if_exists="append", index=False)
-        print("saved to db")
 
     return tweets_df
 
