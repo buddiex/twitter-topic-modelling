@@ -11,6 +11,7 @@ class TweetDataAggregator:
         self.handles_retweeted = []
         self.tweet_text = ''
         self.screen_name = ''
+        self.tweets = []
 
     def parse(self, tweet):
         if "quoted_status" in tweet:
@@ -28,3 +29,4 @@ class TweetDataAggregator:
         self.hashtags.extend([i["text"] for i in tweet["entities"]["hashtags"]])
         self.mentions.extend([i["screen_name"] for i in tweet["entities"]["user_mentions"]])
         self.tweet_text += tweet["full_text"] + " "
+        self.tweets.append(tweet["full_text"])

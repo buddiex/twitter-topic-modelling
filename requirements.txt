@@ -1,3 +1,4 @@
+gensim
 python-dotenv
 tweepy
 pandas
